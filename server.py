@@ -1,7 +1,5 @@
-#!/home/micha/prog/python/multiuser_dungeon/python/bin/python
-
-# Copyright (c) Twisted Matrix Laboratories.
-# See LICENSE for details.
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from zope.interface import implementer
 
@@ -10,6 +8,7 @@ from twisted.cred import checkers, portal
 from twisted.internet import reactor
 
 from lib import *
+from world import *
 
 class Dungeon:
 
@@ -31,16 +30,14 @@ class Dungeon:
 
             yield user
 
-class User(pb.Avatar):
+class User(pb.Avatar, Player):
     def __init__(self, name):
 
-        self.__name = name
+        Player.__init__(self, name, MALE)
 
         self.__client = None
 
         self.__server = None
-
-        self.__player = None
 
     def setServer(self, server):
 
@@ -51,49 +48,77 @@ class User(pb.Avatar):
         return self.__server
 
     def attached(self, mind):
-        
+        """
+        called if a client attached the game
+            :param self: 
+            :param mind: 
+        """   
         self.__client = mind
 
         self.__server.addUser(self)
 
-        self.__player = Player(self.__name)
+        self.tellWorld("{} betritt die Welt.".format(self.getName()))
 
-        self.tellWorld("{} betritt die Welt.".format(self.__name))
+        self.send("Willkommen zurück {}".format(self.getName()))
 
-        self.send("Hallo {}".format(self.__name))
+        self.current_room = markath01()
+
+        self.current_room.addPlayer(self)
 
     def detached(self, mind):
-
-        self.tellWorld("{} verlässt die Welt".format(self.__name))
+        """
+        called if client left the game
+            :param self: 
+            :param mind: 
+        """
+        self.tellWorld("{} verlässt die Welt".format(self.getName()))
 
         self.__server.removeUser(self)
 
         self.__client = None
 
     def send(self, message):
+        """
+        sends a message to this client
+            :param self: 
+            :param message: Message to send
+        """   
 
         self.__client.callRemote("print", message)
 
     def tellWorld(self, message):
-
-        self.send("tellWorld")
-
+        """
+        sends a message to all clients, but self
+            :param self: 
+            :param message: Message to send
+        """
+        # go through all attached clients
         for client in self.__server.getUsers():
 
+            # skip self
             if client == self:
 
                 continue
 
+            # send message
             client.send(message)
 
-    def perspective_tellWorld(self, message):
+    def tellRoom(self, message):
 
-        self.send("perspective_tellWorld")
+        for player in self.current_room.getPlayers():
 
-        self.tellWorld(message)
+            if player == self:
+
+                continue
+
+            player.send(message)
 
     def perspective_doCommand(self, command):
-
+        """
+        basic command handler
+            :param self: 
+            :param command: command to process
+        """
         my_command = command.split()[0]
     
         if len(command.split()) > 1:
@@ -103,14 +128,40 @@ class User(pb.Avatar):
         else:
         
             args = ""
+            
+        result = self.doCommand(my_command, args)
+        
+        if 'message_for_player' in result:
+            
+            self.send(result['message_for_player'])
+            
+        if 'message_for_player_in_room' in result:
+            
+            self.tellRoom(result['message_for_player_in_room'])
+                
+        if 'message_for_all_player' in result:
+            
+            self.tellWorld(result['message_for_all_player'])
 
-        if my_command == 'name':
+    def cmdSage(self, message):
 
-            self.send("Deine Name lautet {}.".format(self.__player.getName()))
+        result = {}
 
-        else:
+        result['message_for_player'] = "Du sagst: {}".format(message)
 
-            self.send("Wie bitte ?")
+        result['message_for_player_in_room'] = "{} sagt: {}".format(self.getName(), message)
+
+        return result
+
+    def cmdRufe(self, message):
+
+        result = {}
+
+        result['message_for_player'] = "Du rufst: {}".format(message)
+
+        result['message_for_all_player'] = "{} ruft: {}".format(self.getName(), message)
+
+        return result
 
 @implementer(portal.IRealm)
 class MyRealm:

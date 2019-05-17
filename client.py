@@ -74,7 +74,6 @@ class Client(pb.Referenceable):
         reactor.run()
 
     def connected(self, perspective):
-        print("connected")
         # this perspective is a reference to our User object.  Save a reference
         # to it here, otherwise it will get garbage collected after this call,
         # and the server will think we logged out.

@@ -1,3 +1,4 @@
 python
 .vscode/
 lib/__pycache__/
+world/__pycache__/

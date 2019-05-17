@@ -4,8 +4,7 @@
     python3 -m venv python
     source python/bin/activate
     pip3 install wheel requests
-    pip3 install twisted
-
+    pip3 install twisted texttable apscheduler pyparsing
 ## Start server
     python/bin/python server.py
 
