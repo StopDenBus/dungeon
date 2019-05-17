@@ -1,2 +1,3 @@
 python
 .vscode/
+lib/__pycache__/
