@@ -84,7 +84,7 @@ class Client(pb.Referenceable):
 
     def sendCommand(self, command):
 
-        self.perspective.callRemote("tellWorld", command)
+        self.perspective.callRemote("doCommand", command)
 
     def perspective_print(self, message):
 

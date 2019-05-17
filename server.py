@@ -9,6 +9,8 @@ from twisted.spread import pb
 from twisted.cred import checkers, portal
 from twisted.internet import reactor
 
+from lib import *
+
 class Dungeon:
 
     def __init__(self):
@@ -38,6 +40,8 @@ class User(pb.Avatar):
 
         self.__server = None
 
+        self.__player = None
+
     def setServer(self, server):
 
         self.__server = server
@@ -51,6 +55,8 @@ class User(pb.Avatar):
         self.__client = mind
 
         self.__server.addUser(self)
+
+        self.__player = Player(self.__name)
 
         self.tellWorld("{} betritt die Welt.".format(self.__name))
 
@@ -85,6 +91,26 @@ class User(pb.Avatar):
         self.send("perspective_tellWorld")
 
         self.tellWorld(message)
+
+    def perspective_doCommand(self, command):
+
+        my_command = command.split()[0]
+    
+        if len(command.split()) > 1:
+        
+            args = " ".join(command.split()[1:])
+        
+        else:
+        
+            args = ""
+
+        if my_command == 'name':
+
+            self.send("Deine Name lautet {}.".format(self.__player.getName()))
+
+        else:
+
+            self.send("Wie bitte ?")
 
 @implementer(portal.IRealm)
 class MyRealm:
