@@ -14,8 +14,9 @@ import sys
 from lib.constants import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from lib.Container import *
-from lib.Corpse import *
+from lib.Container import Container
+from lib.Corpse import Corpse
+from lib.InputParser import InputParser
 
 class BasicRace(Container):
 
@@ -427,10 +428,68 @@ class BasicRace(Container):
 
 		return result
 
+	def cmdNorden(self, args):
+
+		return self.goDirection('norden')
+
+	def cmdNordosten(self, args):
+
+		return self.goDirection('nordosten')
+
 	def cmdOsten(self, args):
 
 		return self.goDirection('osten')
 
+	def cmdNSüdosten(self, args):
+
+		return self.goDirection('südosten')
+
+	def cmdSüden(self, args):
+
+		return self.goDirection('süden')
+
+	def cmdSüdwesten(self, args):
+
+		return self.goDirection('südwesten')
+
 	def cmdWesten(self, args):
 
 		return self.goDirection('westen')
+
+	def cmdNordwesten(self, args):
+
+		return self.goDirection('nordwesten')
+
+	def cmdUntersuche(self, detail):		
+
+		result = {}
+
+		# look at room details first
+		if detail in self.current_room.getDetails():
+
+			return { 'message_for_player': self.current_room.getDetail(detail) }
+
+		argument_parser = InputParser()
+		
+		# parse input
+		argument_parser.parseCommand(detail)
+
+		# get id 
+		id = argument_parser.getObject()
+
+		try:
+			
+			# look for an object in current room, players inventory or in a box
+			my_object = findObjectByIdentity(id, self, argument_parser, True)
+
+			result['message_for_player'] = my_object.getDescription()
+
+		except ObjectIndexException:
+
+			result['message_for_player'] = "Soviele siehst Du hier nicht."
+
+		except NoObjectFoundException:
+
+			result['message_for_player'] = "Sowas siehst Du hier nicht."	
+
+		return result

@@ -17,7 +17,7 @@ class markath01(Room):
 
         self.addDirection("osten", "world.markath.kraemer01")
 
-        #banana = Banane()
+        banana = Banane()
 
         #messer = Knife(NEUTER)
 
@@ -25,7 +25,7 @@ class markath01(Room):
 
         #messer.setShortDescription("Ein Messer.")
 
-        #self.addItem(banana)
+        self.addItem(banana)
 
         #self.addItem(messer)
 

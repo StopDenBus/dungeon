@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import importlib
+import sys
+
+sys.path.append('../')
+
+from lib.Exception import *
 
 FEMALE = 0
 MALE = 1
@@ -54,6 +59,47 @@ def import_class(my_module):
     my_instance = my_class()
 
     return my_instance
+
+def getObjectByInstance(objects, argument_parser):
+		
+		# get objects instance
+		instance = argument_parser.getObjectInstance()
+
+		try:
+			
+			# get object from list
+			object = objects[instance - 1]
+
+		# wrong index
+		except IndexError:
+
+			raise ObjectIndexException()
+
+		return object
+
+
+def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
+	"""
+	docstring here
+		:param id: object id to find 
+		:param player: current player object
+		:param argument_parser: InputParser() instance
+		:param search_in_player=False: look in players inventory too
+	"""
+
+	# look for a object in players current room
+	objects = player.current_room.getItemsbyIdentity(id)
+
+	# some objects are found
+	if len(objects) > 0:
+		
+		return getObjectByInstance(objects, argument_parser)
+
+	# look for a object in players inventory
+	objects = player.getItemsbyIdentity(id)
+
+	# nothing found
+	raise NoObjectFoundException()
 
 def getAdjective(gender):
 

@@ -30,6 +30,16 @@ class Dungeon:
 
             yield user
 
+    def getUsersByName(self, name):
+
+        for user in self.__user_list:
+
+            if user.getName() == name:
+
+                return user
+
+        return None
+
 class User(pb.Avatar, Player):
     def __init__(self, name):
 
@@ -90,7 +100,7 @@ class User(pb.Avatar, Player):
         """
         sends a message to all clients, but self
             :param self: 
-            :param message: Message to send
+            :param message: message to send
         """
         # go through all attached clients
         for client in self.__server.getUsers():
@@ -104,7 +114,11 @@ class User(pb.Avatar, Player):
             client.send(message)
 
     def tellRoom(self, message):
-
+        """
+        sends a message to all players in current room
+            :param self: 
+            :param message: message to send
+        """
         for player in self.current_room.getPlayers():
 
             if player == self:
@@ -113,9 +127,19 @@ class User(pb.Avatar, Player):
 
             player.send(message)
 
+    def tellPlayer(self, player, message):
+        """
+        sends a message to a player
+            :param self: 
+            :param player: player to send the message
+            :param message: message to send
+        """   
+        player.send(message)
+
     def perspective_doCommand(self, command):
         """
-        basic command handler
+        called by remote client
+        will process a command
             :param self: 
             :param command: command to process
         """
@@ -133,7 +157,7 @@ class User(pb.Avatar, Player):
         
         if 'message_for_player' in result:
             
-            self.send(result['message_for_player'])
+            self.tellPlayer(self, result['message_for_player'])
             
         if 'message_for_player_in_room' in result:
             
@@ -162,6 +186,40 @@ class User(pb.Avatar, Player):
         result['message_for_all_player'] = "{} ruft: {}".format(self.getName(), message)
 
         return result
+
+    def cmdTeile(self, args):
+
+        args = args.split(" ")
+
+        name = args[0]
+
+        message = " ".join(args[2:])
+
+        user = self.__server.getUsersByName(name)
+
+        if user is not None:
+
+            if user == self:
+
+                self.tellPlayer(self, "Du bist doch nicht schizophren.")
+
+            else:
+
+                _message = "{} teilt Dir mit: {}".format(self.getName(), message)
+
+                self.tellPlayer(user, _message)
+
+                _message = "Du teilst {} mit: {}".format(name, message)
+
+                self.tellPlayer(self, _message)
+
+        else:
+
+            message = "{} ist nicht anwesend.".format(name)
+
+            self.tellPlayer(self, message)
+
+        return {}
 
 @implementer(portal.IRealm)
 class MyRealm:
