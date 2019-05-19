@@ -151,7 +151,7 @@ class User(pb.Avatar, Player):
         
         else:
         
-            args = ""
+            args = None
             
         result = self.doCommand(my_command, args)
         

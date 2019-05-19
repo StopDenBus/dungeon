@@ -14,15 +14,18 @@ import sys
 from lib.constants import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
+from lib.Commands import Commands
 from lib.Container import Container
 from lib.Corpse import Corpse
 from lib.InputParser import InputParser
 
-class BasicRace(Container):
+class BasicRace(Container, Commands):
 
 	def __init__(self, identity, gender):
 
-		super().__init__(identity)
+		Container.__init__(self, identity)
+
+		Commands.__init__(self)
 
 		self.addIdentity(identity)
 
@@ -378,118 +381,4 @@ class BasicRace(Container):
 
 		return damage
 
-	def doCommand(self, command, args):
-		
-		#try:
-			
-		cmd = getattr(self, "cmd" + command.capitalize())
-			
-		return cmd(args)
-			
-		#except:
-			
-		#	return { 'message_for_player': "Wie bitte ?" } 
-
-	def cmdSchau(self, args):
-     
-		return { 'message_for_player': self.current_room.getDescription(self) }
-
-	def goDirection(self, direction):
-
-		result = {}
-
-		if direction in self.current_room.getDirections():
-
-			next_room = self.current_room.getDirection(direction)
-
-			if type(next_room) is str:
-				
-				next_room = import_class(next_room)
-
-			self.current_room.leaveRoom(self, direction)
-
-			self.current_room.removePlayer(self)
-			
-			self.current_room = next_room
-
-			self.current_room.addPlayer(self)
-
-			self.current_room.enterRoom(self)
-
-			message = "Du gehst nach {}.".format(direction.capitalize())
-
-			message += "\n{}".format(self.current_room.getDescription())
-
-			result['message_for_player'] = message
-
-		else:
-
-			result['message_for_player'] = "Dahin kannst Du nicht gehen."
-
-		return result
-
-	def cmdNorden(self, args):
-
-		return self.goDirection('norden')
-
-	def cmdNordosten(self, args):
-
-		return self.goDirection('nordosten')
-
-	def cmdOsten(self, args):
-
-		return self.goDirection('osten')
-
-	def cmdNSüdosten(self, args):
-
-		return self.goDirection('südosten')
-
-	def cmdSüden(self, args):
-
-		return self.goDirection('süden')
-
-	def cmdSüdwesten(self, args):
-
-		return self.goDirection('südwesten')
-
-	def cmdWesten(self, args):
-
-		return self.goDirection('westen')
-
-	def cmdNordwesten(self, args):
-
-		return self.goDirection('nordwesten')
-
-	def cmdUntersuche(self, detail):		
-
-		result = {}
-
-		# look at room details first
-		if detail in self.current_room.getDetails():
-
-			return { 'message_for_player': self.current_room.getDetail(detail) }
-
-		argument_parser = InputParser()
-		
-		# parse input
-		argument_parser.parseCommand(detail)
-
-		# get id 
-		id = argument_parser.getObject()
-
-		try:
-			
-			# look for an object in current room, players inventory or in a box
-			my_object = findObjectByIdentity(id, self, argument_parser, True)
-
-			result['message_for_player'] = my_object.getDescription()
-
-		except ObjectIndexException:
-
-			result['message_for_player'] = "Soviele siehst Du hier nicht."
-
-		except NoObjectFoundException:
-
-			result['message_for_player'] = "Sowas siehst Du hier nicht."	
-
-		return result
+	
