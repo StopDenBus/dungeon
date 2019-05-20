@@ -17,3 +17,19 @@ class ObjectNotFoundException(Exception):
 class NoObjectFoundException(Exception):
 
 	pass
+
+class GenderNotKnownException(Exception):
+
+	pass
+
+class LoadErrorException(Exception):
+
+	pass
+
+class SaveErrorException(Exception):
+
+	pass
+
+class ExitNotFound(Exception):
+
+	pass

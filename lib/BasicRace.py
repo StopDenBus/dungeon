@@ -381,4 +381,42 @@ class BasicRace(Container, Commands):
 
 		return damage
 
+	def getData(self):
+
+		data = Container.getData(self)
+
+		data['hitpoints'] = self.__hitpoints
+
+		data['max_hitpoints'] = self.__max_hitpoints
+
+		data['magicpoints'] = self.__magicpoints
+
+		data['max_magicpoints'] = self.__max_magicpoints
+
+		data['endurance'] = self.__endurance
+
+		data['strength'] = self.__strength
+
+		data['current_room'] = self.current_room.getClassPath()
+
+		return data
+
+	def setData(self, data):
+		
+		Container.setData(self, data)
+
+		self.__endurance = data['endurance']
+
+		self.__hitpoints = data['hitpoints']
+
+		self.__magicpoints = data['magicpoints']
+
+		self.__max_hitpoints = data['max_hitpoints']
+
+		self.__max_magicpoints = data['max_magicpoints']
+
+		self.__strength = data['strength']
+
+		self.current_room = import_class(data['current_room'])
+
 	

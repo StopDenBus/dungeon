@@ -1,0 +1,26 @@
+{
+    "current_room": "world.markath.markath01",
+    "description": "StopdenBus ist ein Abenteurer wie er im Buche steht",
+    "endurance": 100,
+    "gender": 1,
+    "hitpoints": 100,
+    "id": "stopdenbus",
+    "identities": [
+        "stopdenbus",
+        "player"
+    ],
+    "magicpoints": 100,
+    "max_hitpoints": 100,
+    "max_magicpoints": 100,
+    "name": "stopdenbus",
+    "plural": null,
+    "properties": {
+        "__is_player__": true
+    },
+    "short_description": null,
+    "singular": null,
+    "strength": 50,
+    "title": "der Maler",
+    "value": 0,
+    "weight": 100
+}

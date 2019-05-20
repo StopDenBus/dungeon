@@ -61,21 +61,26 @@ def import_class(my_module):
     return my_instance
 
 def getObjectByInstance(objects, argument_parser):
-		
-		# get objects instance
-		instance = argument_parser.getObjectInstance()
+	"""
+	returns an object from a list by its position
+		:param objects: list of objects
+		:param argument_parser: InputParser() instance
+	"""
+	
+	# get objects instance
+	instance = argument_parser.getObjectInstance()
 
-		try:
+	try:
 			
-			# get object from list
-			object = objects[instance - 1]
+		# get object from list
+		object = objects[instance - 1]
 
-		# wrong index
-		except IndexError:
+	# wrong index
+	except IndexError:
 
-			raise ObjectIndexException()
+		raise ObjectIndexException()
 
-		return object
+	return object
 
 
 def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
@@ -97,6 +102,11 @@ def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
 
 	# look for a object in players inventory
 	objects = player.getItemsbyIdentity(id)
+
+	# some objects are found
+	if len(objects) > 0:
+
+		return getObjectByInstance(objects, argument_parser)
 
 	# nothing found
 	raise NoObjectFoundException()

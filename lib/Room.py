@@ -27,7 +27,7 @@ class Room(Container):
 
     def getDescription(self, current_player = None):
 
-        description = textwrap.fill(Base.getDescription(self), TEXT_WRAP)
+        description = textwrap.fill(BasicObject.getDescription(self), TEXT_WRAP)
         
         description += "\nDu kannst in folgende Richtungen gehen: %s" % ', '.join(self.__directions.keys())
 
@@ -37,7 +37,7 @@ class Room(Container):
 
                 continue
 
-            description += "\n{}".format(player.getName())
+            description += "\n{}".format(player.getShortDescription())
 
         if len(self.__creatures) > 0:
 
@@ -51,7 +51,7 @@ class Room(Container):
 
         if len(self.getItems()) > 0:
 
-            for item in Base.getItems(self):
+            for item in self.getItems():
 
                 description += "\n%s" % item.getShortDescription()
 
@@ -105,8 +105,6 @@ class Room(Container):
     def addItem(self, item):
 
         super().addItem(item)
-
-        item.setContainer(self)
 
         commands = item.getCommands()
 
@@ -217,6 +215,8 @@ class Room(Container):
         """
         self.__players.append(player)
 
+        player.setContainer(self)
+
     def removePlayer(self, player):
         """
         remove's a player from room
@@ -226,7 +226,10 @@ class Room(Container):
         self.__players.remove(player)
 
     def getPlayers(self):
-
+        """
+        returns all player in current room
+            :param self: 
+        """
         for player in self.__players:
 
             yield player

@@ -42,4 +42,25 @@ class Base():
 			return self.__properties[key]
 
 		return None
+
+	def getData(self):
+
+		data = {}
+
+		data['description'] = self.__description
+
+		data['properties'] = self.__properties
 		
+		for item in self.__items:
+			
+			item_data = item.getData()
+			
+			item_class = item.getClassPath()
+			
+			if not item_class in data['items']:
+				
+				data['items'][item_class] = []
+				
+			data['items'][item_class].append(item_data)
+
+		return data

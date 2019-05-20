@@ -14,13 +14,25 @@ class Container(BasicObject):
 
 		BasicObject.__init__(self, identity)
 
+		self.__items = [ ]
+
+	def addItem(self, item):
+
+		self.__items.append(item)
+
+		item.setContainer(self)
+
+	def removeItem(self, item):
+
+		self.__items.remove(item)
+
+	def getItems(self):
+
+		return self.__items
+
 	def findMoney(self):
 
-		items = BasicObject.getItems(self)
-
-		money_found = False
-
-		for item in items:
+		for item in self.__items:
 
 			if "münze" in item.getIdentities():
 
@@ -28,7 +40,7 @@ class Container(BasicObject):
 
 		money = Money()
 
-		BasicObject.addItem(self, money)
+		self.addItem(money)
 
 		return money
 
@@ -67,3 +79,41 @@ class Container(BasicObject):
 				found_items.append(item)
 
 		return found_items
+
+	def getData(self):
+
+		data = BasicObject.getData(self)
+
+		for item in self.__items:
+			
+			item_data = item.getData()
+			
+			item_class = item.getClassPath()
+			
+			if not item_class in data['items']:
+				
+				data['items'][item_class] = []
+				
+			data['items'][item_class].append(item_data)
+
+		return data
+
+	def setData(self, data):
+
+		BasicObject.setData(self, data)
+		
+		if 'items' in data:
+			
+			for item_type in data['items']:
+				
+				item_class = item_type
+				
+				for item_data in data['items'][item_type]:
+					
+					item = import_class(item_class)
+					
+					item.setData(item_data)
+					
+					item.setContainer(self)
+					
+					self.__items.append(item)

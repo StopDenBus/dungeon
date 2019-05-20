@@ -1,0 +1,26 @@
+{
+    "current_room": "world.markath.markath01",
+    "description": "Malefitz ist ein Abenteurer wie er im Buche steht",
+    "endurance": 100,
+    "gender": 1,
+    "hitpoints": 100,
+    "id": "malefitz",
+    "identities": [
+        "malefitz",
+        "player"
+    ],
+    "magicpoints": 100,
+    "max_hitpoints": 100,
+    "max_magicpoints": 100,
+    "name": "malefitz",
+    "plural": null,
+    "properties": {
+        "__is_player__": true
+    },
+    "short_description": "Malefitz",
+    "singular": null,
+    "strength": 50,
+    "title": "der Abenteurer",
+    "value": 0,
+    "weight": 100
+}

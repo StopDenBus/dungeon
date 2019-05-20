@@ -20,17 +20,17 @@ class Commands():
         
             self.__input_parser.parseCommand(args)
         
-        try:
+        #try:
             
-            cmd = getattr(self, "cmd" + command.capitalize())
+        cmd = getattr(self, "cmd" + command.capitalize())
             
-            return cmd(args)
+        return cmd(args)
             
-        except Exception as ex:
+        #except Exception as ex:
 
-            print(str(ex))
+        #    print(str(ex))
 
-            return { 'message_for_player': "Wie bitte ?" } 
+        #    return { 'message_for_player': "Wie bitte ?" } 
             
     def cmdSchau(self, args):
         
@@ -60,7 +60,7 @@ class Commands():
             
             message = "Du gehst nach {}.".format(direction.capitalize())
             
-            message += "\n{}".format(self.current_room.getDescription())
+            message += "\n{}".format(self.current_room.getDescription(self))
                 
             result['message_for_player'] = message
             
@@ -134,3 +134,13 @@ class Commands():
     def cmdInventar(self, args):
 
         return { 'message_for_player': self.getInventory() }
+
+    def cmdSave(self, args):
+
+        self.savePlayer()
+
+        return { 'message_for_player': 'Deine Daten wurden gespeichert.' }
+
+    def cmdData(self, args):
+
+        return { 'message_for_player': self.getData() }

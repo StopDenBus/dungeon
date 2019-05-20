@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
+
 from zope.interface import implementer
 
 from twisted.spread import pb
@@ -49,6 +51,8 @@ class User(pb.Avatar, Player):
 
         self.__server = None
 
+        self.setSaveDirectory("{}/save/player/".format(os.path.abspath(os.path.dirname(__file__))))
+
     def setServer(self, server):
 
         self.__server = server
@@ -64,6 +68,8 @@ class User(pb.Avatar, Player):
             :param mind: 
         """   
         self.__client = mind
+
+        self.loadPlayer()
 
         self.__server.addUser(self)
 
@@ -82,6 +88,10 @@ class User(pb.Avatar, Player):
             :param mind: 
         """
         self.tellWorld("{} verlässt die Welt".format(self.getName()))
+
+        self.savePlayer()
+
+        self.current_room.removePlayer(self)
 
         self.__server.removeUser(self)
 
@@ -253,8 +263,8 @@ class MyRealm:
 realm = MyRealm()
 realm.setServer(Dungeon())
 checker = checkers.InMemoryUsernamePasswordDatabaseDontUse()
-checker.addUser("user1", "pass1".encode('utf-8'))
-checker.addUser("user2", "pass2".encode('utf-8'))
+checker.addUser("malefitz", "pass1".encode('utf-8'))
+checker.addUser("stopdenbus", "pass2".encode('utf-8'))
 p = portal.Portal(realm, [checker])
 print("Server started.")
 reactor.listenTCP(8800, pb.PBServerFactory(p))
