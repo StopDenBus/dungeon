@@ -1,5 +1,4 @@
 from .constants import *
-from .Base import *
 from .BasicObject import *
 from .Box import *
 from .CommandResult import *
