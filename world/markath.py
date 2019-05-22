@@ -19,15 +19,23 @@ class markath01(Room):
 
         banana = Banane()
 
-        #messer = Knife(NEUTER)
+        messer = Knife(NEUTER)
 
-        #messer.setDescription("Ein Messer.")
+        messer.setDescription("Ein Messer.")
 
-        #messer.setShortDescription("Ein Messer.")
+        messer.setShortDescription("Ein Messer.")
 
         self.addItem(banana)
 
-        #self.addItem(messer)
+        box = Box("kiste", FEMALE)
+
+        box.setDescription("Eine hölzerne Kiste mit silbernen Beschlägen.")
+
+        box.setShortDescription("Eine hölzerne Kiste")
+
+        box.addItem(messer)
+
+        self.addItem(box)
 
 @singleton
 class kraemer01(Room):

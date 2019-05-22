@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import time
 
 from zope.interface import implementer
 
@@ -14,33 +15,62 @@ from world import *
 
 class Dungeon:
 
+    user_list = []
+
     def __init__(self):
 
         self.__user_list = []
 
-    def addUser(self, user):
+    @classmethod
+    def addUser(cls, user):
 
-        self.__user_list.append(user)
+        cls.user_list.append(user)
 
-    def removeUser(self, user):
+    @classmethod
+    def removeUser(cls, user):
 
-        self.__user_list.remove(user)
+        cls.user_list.remove(user)
 
-    def getUsers(self):
+    @classmethod
+    def getUsers(cls):
 
-        for user in self.__user_list:
+        for user in cls.user_list:
 
             yield user
 
-    def getUsersByName(self, name):
+    @classmethod
+    def getUserByName(cls, name):
 
-        for user in self.__user_list:
+        for user in cls.user_list:
 
             if user.getName() == name:
 
                 return user
 
         return None
+
+    @classmethod
+    def shutdown(cls, timeout):
+
+        for user in Dungeon.user_list:
+
+            user.savePlayer()
+
+        time.sleep(timeout)
+
+        try:
+
+            reactor.shutdown()
+
+        except:
+
+            print("exception shutdown")
+
+        #reactor.removeAll()
+        #reactor.iterate()
+        #reactor.stop()
+        #reactor.callFromThread(reactor.stop)
+
 
 class User(pb.Avatar, Player):
     def __init__(self, name):
@@ -71,7 +101,9 @@ class User(pb.Avatar, Player):
 
         self.loadPlayer()
 
-        self.__server.addUser(self)
+        Dungeon.addUser(self)
+
+        #self.__server.addUser(self)
 
         self.tellWorld("{} betritt die Welt.".format(self.getName()))
 
@@ -87,15 +119,23 @@ class User(pb.Avatar, Player):
             :param self: 
             :param mind: 
         """
+        print("Verbindung zu {} verloren.".format(self.getName()))
+
         self.tellWorld("{} verlässt die Welt".format(self.getName()))
 
         self.savePlayer()
 
         self.current_room.removePlayer(self)
 
-        self.__server.removeUser(self)
+        Dungeon.removeUser(self)
+
+        #self.__server.removeUser(self)
 
         self.__client = None
+
+    def callRemoteMethod(self, method, args):
+
+        self.__client.callRemote(method, args)
 
     def send(self, message):
         """
@@ -103,8 +143,13 @@ class User(pb.Avatar, Player):
             :param self: 
             :param message: Message to send
         """   
+        try:
 
-        self.__client.callRemote("print", message)
+            self.__client.callRemote("print", message)
+
+        except:
+
+            print("exception in send")
 
     def tellWorld(self, message):
         """
@@ -113,7 +158,7 @@ class User(pb.Avatar, Player):
             :param message: message to send
         """
         # go through all attached clients
-        for client in self.__server.getUsers():
+        for client in Dungeon.getUsers():
 
             # skip self
             if client == self:
@@ -122,6 +167,12 @@ class User(pb.Avatar, Player):
 
             # send message
             client.send(message)
+
+    def tellAll(self, message):
+
+        for player in Dungeon.getUsers():
+
+            player.send(message)
 
     def tellRoom(self, message):
         """
@@ -154,6 +205,10 @@ class User(pb.Avatar, Player):
             :param command: command to process
         """
         my_command = command.split()[0]
+
+        if my_command == 'shutdown':
+
+            self.cmdShutdown()
     
         if len(command.split()) > 1:
         
@@ -205,7 +260,7 @@ class User(pb.Avatar, Player):
 
         message = " ".join(args[2:])
 
-        user = self.__server.getUsersByName(name)
+        user = Dungeon.getUserByName(name)
 
         if user is not None:
 
@@ -228,6 +283,28 @@ class User(pb.Avatar, Player):
             message = "{} ist nicht anwesend.".format(name)
 
             self.tellPlayer(self, message)
+
+        return {}
+
+    def cmdEnde(self, args):
+
+        self.__client.callRemote("closeConnection", "Auf Wiedersehen.")
+
+        return {}
+
+    def cmdShutdown(self, timeout=5):
+
+        try:
+
+            timeout = int(timeout)
+
+        except:
+
+            timeout = 5
+
+        self.tellAll("### Game will shutdown in {} seconds ! ###".format(timeout))
+
+        reactor.callInThread(Dungeon.shutdown(timeout))
 
         return {}
 

@@ -162,6 +162,8 @@ class Player(BasicRace):
 		except:
 			
 			raise(SaveErrorException)
+
+		print("Data to {} saved".format(save_file))
 			
 	def loadPlayer(self):
 

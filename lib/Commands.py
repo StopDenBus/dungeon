@@ -5,8 +5,10 @@ import sys
 
 sys.path.append('../')
 
-from lib.constants import *
+from lib.BasicObject import BasicObject
 from lib.InputParser import InputParser
+
+from lib.constants import *
 
 class Commands():
 
@@ -117,7 +119,7 @@ class Commands():
         try:
 			
 			# look for an object in current room, players inventory or in a box
-            my_object = findObjectByIdentity(id, self, self.__input_parser, True)
+            (container, my_object) = findObjectByIdentity(id, self, self.__input_parser, True)
             
             result['message_for_player'] = my_object.getDescription()
             
@@ -134,6 +136,39 @@ class Commands():
     def cmdInventar(self, args):
 
         return { 'message_for_player': self.getInventory() }
+
+    def cmdNimm(self, args):
+
+        result = {}
+
+        # get id 
+        my_object = self.__input_parser.getObject()
+
+        try:
+
+            (container, my_object) = findObjectByIdentity(my_object, self, self.__input_parser, False)
+
+        except ObjectIndexException:
+            
+            result['message_for_player'] = "Soviele siehst Du hier nicht."
+            
+        except NoObjectFoundException:
+            
+            result['message_for_player'] = "Sowas siehst Du hier nicht."
+
+        if isinstance(my_object, BasicObject):
+
+            container.removeItem(my_object)
+
+            self.addItem(my_object)
+
+            my_object.setContainer(self)
+
+            result['message_for_player'] = "Du nimmst {} {}.".format(getAdjective(my_object.getGender()), my_object.getName())
+
+            result['message_for_player_in_room'] = "{} nimmt {} {}.".format(self.getName(), getAdjective(my_object.getGender()), my_object.getName())
+
+        return result
 
     def cmdSave(self, args):
 

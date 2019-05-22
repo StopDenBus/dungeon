@@ -69,5 +69,9 @@ class Banane(Fruit):
 		Fruit.setHealthiness(self, randint(3,6))
 
 		Fruit.setValue(self, randint(8,11))
+
+		self.setSingular('Banane')
+
+		self.setPlural('Bananen')
 		
 	

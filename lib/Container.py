@@ -84,6 +84,8 @@ class Container(BasicObject):
 
 		data = BasicObject.getData(self)
 
+		data['items'] = {}
+
 		for item in self.__items:
 			
 			item_data = item.getData()

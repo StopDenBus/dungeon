@@ -64,6 +64,17 @@ class Client(pb.Referenceable):
 
         reactor.connectTCP("localhost", 8800, factory)
 
+        #anonymousLogin = factory.login(Anonymous())
+        #anonymousLogin.addCallback(connected)
+        #anonymousLogin.addErrback(error, "Anonymous login failed")
+
+        #usernameLogin = factory.login(UsernamePassword("user1", "pass1"))
+        #usernameLogin.addCallback(connected)
+        #usernameLogin.addErrback(error, "Username/password login failed")
+
+        #bothDeferreds = gatherResults([anonymousLogin, usernameLogin])
+        #bothDeferreds.addCallback(finished)
+
         def1 = factory.login(credentials.UsernamePassword(self.__username, self.__password.encode('utf-8')),
                              client=self)
         
@@ -83,20 +94,45 @@ class Client(pb.Referenceable):
 
     def sendCommand(self, command):
 
-        self.perspective.callRemote("doCommand", command)
+        try:
+
+            self.perspective.callRemote("doCommand", command)
+
+        except pb.DeadReferenceError:
+
+            print("Hoppla, Verbindung zum Server abgebrochen.")
+
+            self.shutdown()
+
+        except Exception:
+
+            print("Noch eine Exception")
 
     def perspective_print(self, message):
 
         print(message)
 
-    def gotGroup(self, group):
-        print("joined group, now sending a message to all members")
-        # 'group' is a reference to the Group object (through a ViewPoint)
-        d = group.callRemote("send", "You can call me Al.")
-        d.addCallback(self.shutdown)
+    def remote_closeConnection(self, message):
+
+        print(message)
+
+        self.shutdown()
 
     def shutdown(self):
+
         reactor.stop()
+
+    def clientConnectionFailed(self, connector, reason):
+
+        print("Verbindung zum Server fehlgeschlagen. Grund: {}".format(reason))
+
+        self.shutdown()
+
+    def clientConnectionLost(self, connector, reason):
+
+        print("Verbindung zum Server fehlgeschlagen. Grund: {}".format(reason))
+
+        self.shutdown()
 
 def main(argv):
 

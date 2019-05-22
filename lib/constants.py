@@ -92,13 +92,40 @@ def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
 		:param search_in_player=False: look in players inventory too
 	"""
 
+	# first we look for boxes
+	box = argument_parser.getContainer()
+	
+	# if box is set
+	if box is not None:
+
+		# get all boxes in players room
+		boxes = player.current_room.getItemsbyIdentity('box')
+
+		# if we found one or more
+		if len(boxes) > 0:
+
+			# choose the right one
+			box = getObjectByInstance(boxes, argument_parser)
+
+			# and get all matched objects
+			objects = box.getItemsbyIdentity(id)
+
+			# if we found one or more
+			if len(objects) > 0:
+
+				# return the right one
+				return (box, getObjectByInstance(objects, argument_parser))
+
+		# no boxes found	
+		raise ContainerNotFoundException()
+
 	# look for a object in players current room
 	objects = player.current_room.getItemsbyIdentity(id)
 
 	# some objects are found
 	if len(objects) > 0:
 		
-		return getObjectByInstance(objects, argument_parser)
+		return (player.current_room, getObjectByInstance(objects, argument_parser))
 
 	# look for a object in players inventory
 	objects = player.getItemsbyIdentity(id)
@@ -106,7 +133,7 @@ def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
 	# some objects are found
 	if len(objects) > 0:
 
-		return getObjectByInstance(objects, argument_parser)
+		return (player, getObjectByInstance(objects, argument_parser))
 
 	# nothing found
 	raise NoObjectFoundException()

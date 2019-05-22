@@ -19,6 +19,8 @@ class Box(Container):
 
 		self.addIdentity(identity)
 
+		self.addIdentity('box')
+
 		self.setGender(gender)
 
 		self.addProperty("__is_box__", True)

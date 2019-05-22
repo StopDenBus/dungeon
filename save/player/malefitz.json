@@ -9,6 +9,26 @@
         "malefitz",
         "player"
     ],
+    "items": {
+        "lib.Fruit.Banane": [
+            {
+                "description": "Eine sch\u00f6ne gelbe Banane. Du kannst sie essen.",
+                "gender": 0,
+                "id": "banane",
+                "identities": [
+                    "banane",
+                    "banane"
+                ],
+                "name": "banane",
+                "plural": null,
+                "properties": {},
+                "short_description": "Eine Banane.",
+                "singular": null,
+                "value": 9,
+                "weight": 2
+            }
+        ]
+    },
     "magicpoints": 100,
     "max_hitpoints": 100,
     "max_magicpoints": 100,
