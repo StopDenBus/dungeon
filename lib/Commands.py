@@ -6,6 +6,7 @@ import sys
 sys.path.append('../')
 
 from lib.BasicObject import BasicObject
+from lib.Box import Box
 from lib.InputParser import InputParser
 
 from lib.constants import *
@@ -156,7 +157,22 @@ class Commands():
             
             result['message_for_player'] = "Sowas siehst Du hier nicht."
 
+        except ContainerNotFoundException:
+
+            result['message_for_player'] = "{} siehst Du hier nicht.".format(self.__input_parser.getContainer().capitalize())
+
         if isinstance(my_object, BasicObject):
+
+            if isinstance(container, Box):
+
+                if not container.isOpen():
+
+                    result['message_for_player'] = "{} {} ist geschlossen.".format(
+                        getAdjective(container.getGender()).capitalize(),
+                        container.getName()
+                    )
+
+                    return result
 
             container.removeItem(my_object)
 
@@ -169,6 +185,57 @@ class Commands():
             result['message_for_player_in_room'] = "{} nimmt {} {}.".format(self.getName(), getAdjective(my_object.getGender()), my_object.getName())
 
         return result
+
+    def cmdÖffne(self, args):
+
+        result = {}
+
+        my_box = self.__input_parser.getObject()
+
+        try:
+            
+            (_, my_box) = findObjectByIdentity(args, self, self.__input_parser, False)
+
+        except NoObjectFoundException:
+            
+            result['message_for_player'] = "Sowas siehst Du hier nicht."
+
+        if isinstance(my_box, Box):
+
+            if my_box.isOpen():
+
+                result['message_for_player'] = "{} {} ist bereits geöffnet.".format(
+                    getAdjective(my_box.getGender()).capitalize(),
+                    my_box.getName(),
+                )
+            else:
+
+                result['message_for_player'] = "Du öffnest {} {}.".format(
+                    getAdjective(my_box.getGender()),
+                    my_box.getName()
+                )
+
+                result['message_for_player_in_room'] = "{} öffnet {} {}".format(
+                    self.getName(),
+                    getAdjective(my_box.getGender()),
+                    my_box.getName(),
+                )
+
+                my_box.openBox()
+        else:
+
+            result['message_for_player'] = "{} {} kannst Du nicht öffnen.".format(
+                getAdjective(my_box.getGender()).capitalize(),
+                my_box.getName(),
+            )
+
+        return result
+
+
+
+
+
+
 
     def cmdSave(self, args):
 

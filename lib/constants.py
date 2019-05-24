@@ -116,6 +116,10 @@ def findObjectByIdentity(id, player, argument_parser, search_in_player=False):
 				# return the right one
 				return (box, getObjectByInstance(objects, argument_parser))
 
+			else:
+
+				raise NoObjectFoundException()
+
 		# no boxes found	
 		raise ContainerNotFoundException()
 
