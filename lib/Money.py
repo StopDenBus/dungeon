@@ -15,15 +15,15 @@ class Money(BasicObject):
 
 		BasicObject.__init__(self)
 
-		BasicObject.setGender(self, FEMALE)
+		self.setGender(FEMALE)
 
-		self.addIdentity('münze')
+		self.setName('münze')
 
-		BasicObject.addIdentity(self, "münzen")
+		self.addIdentity("münzen")
 
-		BasicObject.setSingular(self, "Münze")
+		self.setSingular("Münze")
 
-		BasicObject.setPlural(self, "Münzen")
+		self.setPlural("Münzen")
 
 		self.__count = 0
 
