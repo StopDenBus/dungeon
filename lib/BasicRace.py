@@ -21,15 +21,11 @@ from lib.InputParser import InputParser
 
 class BasicRace(Container, Commands):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		Container.__init__(self, identity)
+		Container.__init__(self)
 
 		Commands.__init__(self)
-
-		self.addIdentity(identity)
-
-		self.setGender(gender)
 
 		self.__hitpoints = 0
 

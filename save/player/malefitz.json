@@ -16,16 +16,33 @@
                 "gender": 0,
                 "id": "banane",
                 "identities": [
-                    "banane",
                     "banane"
                 ],
                 "name": "banane",
-                "plural": null,
+                "plural": "Bananen",
                 "properties": {},
                 "short_description": "Eine Banane.",
-                "singular": null,
-                "value": 9,
+                "singular": "Banane",
+                "value": 8,
                 "weight": 2
+            }
+        ],
+        "lib.Knife.Knife": [
+            {
+                "description": "Ein Messer.",
+                "gender": 2,
+                "id": "messer",
+                "identities": [
+                    "messer",
+                    "weapon"
+                ],
+                "name": "messer",
+                "plural": null,
+                "properties": {},
+                "short_description": "Ein Messer.",
+                "singular": null,
+                "value": 0,
+                "weight": 0
             }
         ]
     },

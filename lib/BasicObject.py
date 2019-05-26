@@ -9,7 +9,7 @@ from lib.constants import *
 
 class BasicObject():
 
-	def __init__(self, identity):
+	def __init__(self):
 
 		self.__commands = { }
 
@@ -19,13 +19,9 @@ class BasicObject():
 
 		self.__gender = None
 
-		self.__id = identity
+		self.__id = None
 
 		self.__identities = [ ]
-
-		self.__identities.append(identity)
-
-		self.__name = identity
 
 		self.__plural = None
 
@@ -60,6 +56,14 @@ class BasicObject():
 			return self.__properties[key]
 
 		return None
+
+	def setName(self, name):
+
+		self.__name = name
+
+		self.__id = name
+
+		self.addIdentity(name)
 
 	def getName(self):
 

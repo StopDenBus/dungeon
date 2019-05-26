@@ -12,15 +12,11 @@ from lib.BasicObject import *
 
 class Fruit(BasicObject):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		BasicObject.__init__(self, identity)
+		super().__init__()
 
-		BasicObject.setGender(self, gender)
-
-		BasicObject.addIdentity(self, identity)
-
-		BasicObject.addCommand(self, 'iss', lambda player, what, instance: self.commandEat(what))
+		self.addCommand('iss', lambda player, what, instance: self.commandEat(what))
 
 		self.__healthiness = 0
 
@@ -58,17 +54,21 @@ class Banane(Fruit):
 	
 	def __init__(self):
 
-		Fruit.__init__(self, "banane", FEMALE)
+		super().__init__()
 
-		Fruit.setDescription(self, "Eine schöne gelbe Banane. Du kannst sie essen.")
+		self.setName("banane")
 
-		Fruit.setShortDescription(self, "Eine Banane.")
+		self.setGender(FEMALE)
 
-		Fruit.setWeight(self, 2)
+		self.setDescription("Eine schöne gelbe Banane. Du kannst sie essen.")
 
-		Fruit.setHealthiness(self, randint(3,6))
+		self.setShortDescription("Eine Banane.")
 
-		Fruit.setValue(self, randint(8,11))
+		self.setWeight(2)
+
+		self.setHealthiness(randint(3,6))
+
+		self.setValue(randint(8,11))
 
 		self.setSingular('Banane')
 

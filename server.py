@@ -75,7 +75,9 @@ class Dungeon:
 class User(pb.Avatar, Player):
     def __init__(self, name):
 
-        Player.__init__(self, name, MALE)
+        Player.__init__(self)
+
+        self.setName(name)
 
         self.__client = None
 

@@ -9,15 +9,13 @@ from lib.BasicObject import *
 
 class Weapon(BasicObject):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		super().__init__(identity)
+		super().__init__()
 
 		self.__attack = 0
 
 		self.__drawed = False
-
-		self.setGender(gender)
 
 		self.addIdentity("weapon")
 

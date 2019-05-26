@@ -19,15 +19,21 @@ class markath01(Room):
 
         banana = Banane()
 
-        messer = Knife(NEUTER)
+        messer = Knife()
 
         messer.setDescription("Ein Messer.")
 
         messer.setShortDescription("Ein Messer.")
 
+        messer.setGender(NEUTER)
+
         self.addItem(banana)
 
-        box = Box("kiste", FEMALE)
+        box = Box()
+
+        box.setName('kiste')
+
+        box.setGender(FEMALE)
 
         box.setDescription("Eine hölzerne Kiste mit silbernen Beschlägen.")
 

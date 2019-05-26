@@ -45,20 +45,20 @@ def singleton(cls, *args, **kw):
 	return _singleton
 
 def import_class(my_module):
-
-    module_path = my_module.split(".")
-
-    module_dir_path = ".".join(module_path[0:-1])
-
-    my_class = module_path[-1]
-
-    module = importlib.import_module(module_dir_path)
-
-    my_class = getattr(module, my_class)
-
-    my_instance = my_class()
-
-    return my_instance
+	
+	module_path = my_module.split(".")
+	
+	module_dir_path = ".".join(module_path[0:-1])
+	
+	my_class = module_path[-1]
+	
+	module = importlib.import_module(module_dir_path)
+	
+	my_class = getattr(module, my_class)
+		
+	my_instance = my_class()
+		
+	return my_instance
 
 def getObjectByInstance(objects, argument_parser):
 	"""

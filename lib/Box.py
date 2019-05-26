@@ -13,15 +13,11 @@ from lib.Container import *
 
 class Box(Container):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		super().__init__(identity)
-
-		self.addIdentity(identity)
+		super().__init__()
 
 		self.addIdentity('box')
-
-		self.setGender(gender)
 
 		self.addProperty("__is_box__", True)
 

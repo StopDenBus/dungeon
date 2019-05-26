@@ -13,7 +13,7 @@ class Room(Container):
 
     def __init__(self):
 
-        super().__init__(None)
+        super().__init__()
         
         self.__creatures =  [ ]
 

@@ -9,6 +9,10 @@ from lib.Weapon import *
 
 class Knife(Weapon):
 
-	def __init__(self, gender):
+	def __init__(self):
 
-		super().__init__("messer", gender)
+		super().__init__()
+
+		self.setGender(FEMALE)
+
+		self.addIdentity('messer')

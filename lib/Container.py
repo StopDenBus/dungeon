@@ -10,9 +10,9 @@ from lib.Money import *
 
 class Container(BasicObject):
 
-	def __init__(self, identity):
+	def __init__(self):
 
-		BasicObject.__init__(self, identity)
+		BasicObject.__init__(self)
 
 		self.__items = [ ]
 

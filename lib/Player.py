@@ -9,7 +9,6 @@ import textwrap
 from pathlib import Path
 from texttable import Texttable
 
-
 sys.path.append('../')
 
 from lib.constants import *
@@ -21,9 +20,9 @@ from lib.Exception import LoadErrorException, SaveErrorException
 
 class Player(BasicRace):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		super().__init__(identity, gender)
+		super().__init__()
 
 		self.message_queue = queue.Queue()
 
@@ -144,6 +143,8 @@ class Player(BasicRace):
 	def exists(self):
 		
 		save_file = "{}/{}.json".format(self.__save_file_directory, self.getName().lower())
+
+		save_file = Path(save_file)
 		
 		return save_file.is_file()
 

@@ -10,9 +10,9 @@ from lib.BasicRace import *
 
 class Seller(BasicRace):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		super().__init__(identity, gender)
+		super().__init__()
 
 		super().setHitPoints(50)
 

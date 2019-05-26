@@ -11,9 +11,9 @@ from lib.BasicRace import *
 
 class Human(BasicRace):
 
-	def __init__(self, identity, gender):
+	def __init__(self):
 
-		BasicRace.__init__(self, identity, gender)
+		BasicRace.__init__(self)
 
 		BasicRace.setHitpoints(self, 100)
 
@@ -26,3 +26,5 @@ class Human(BasicRace):
 		BasicRace.setShortDescription(self, "Ein Mensch.")
 
 		BasicRace.setGender(self, MALE)
+
+		BasicRace.addIdentity('mensch')

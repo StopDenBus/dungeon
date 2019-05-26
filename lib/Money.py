@@ -13,9 +13,11 @@ class Money(BasicObject):
 
 	def __init__(self):
 
-		BasicObject.__init__(self, "münze")
+		BasicObject.__init__(self)
 
 		BasicObject.setGender(self, FEMALE)
+
+		self.addIdentity('münze')
 
 		BasicObject.addIdentity(self, "münzen")
 

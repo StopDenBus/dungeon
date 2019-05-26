@@ -15,7 +15,7 @@ class Corpse(Container):
 
 	def __init__(self):
 
-		super().__init__("leiche")
+		super().__init__()
 
 		self.addIdentity("leiche")
 
