@@ -231,6 +231,50 @@ class Commands():
 
         return result
 
+    def cmdSchliesse(self, args):
+
+        result = {}
+
+        my_box = self.__input_parser.getObject()
+
+        try:
+            
+            (_, my_box) = findObjectByIdentity(args, self, self.__input_parser, False)
+
+        except NoObjectFoundException:
+            
+            result['message_for_player'] = "Sowas siehst Du hier nicht."
+
+        if isinstance(my_box, Box):
+
+            if not my_box.isOpen():
+
+                result['message_for_player'] = "{} {} ist bereits geschlossen.".format(
+                    getAdjective(my_box.getGender()).capitalize(),
+                    my_box.getName(),
+                )
+            else:
+
+                result['message_for_player'] = "Du schliesst {} {}.".format(
+                    getAdjective(my_box.getGender()),
+                    my_box.getName()
+                )
+
+                result['message_for_player_in_room'] = "{} schliesst {} {}".format(
+                    self.getName(),
+                    getAdjective(my_box.getGender()),
+                    my_box.getName(),
+                )
+
+                my_box.closeBox()
+        else:
+
+            result['message_for_player'] = "{} {} kannst Du nicht schliessen.".format(
+                getAdjective(my_box.getGender()).capitalize(),
+                my_box.getName(),
+            )
+
+        return result
 
     def cmdSave(self, args):
 
