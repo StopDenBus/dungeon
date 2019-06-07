@@ -11,7 +11,10 @@ class markath01(Room):
 
         super().__init__()
 
-        self.setDescription("Du befindest dich im Startraum.")
+        self.setDescription( {
+            "de": "Du befindest dich im Startraum.",
+            "en": "You're in the starting room."
+        } )
 
         self.addDetail("startraum", "Du befindest dich mitten drin.")
 
