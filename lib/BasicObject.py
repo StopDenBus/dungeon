@@ -37,8 +37,6 @@ class BasicObject():
 
 		self.__weight = 0
 
-		self.addCommand('nimm', lambda player, what, instance: self.commandTake(player))
-
 	def getDescription(self):
 
 		return self.__description
@@ -154,22 +152,6 @@ class BasicObject():
 	def getContainer(self):
 
 		return self.__container
-
-	def commandTake(self, player):
-
-		result = {}
-
-		if ( player.getItemsWeight() + self.getWeight() ) > player.getBurden():
-
-			result['message'] = "%s %s ist zu schwer für Dich." % ( getAdjective(self.getGender()).capitalize(), self.getId().capitalize())
-
-		else:
-
-			result['message'] = "Du nimmst %s %s." % ( getAdjective(self.getGender()), self.getId().capitalize())
-
-			result['move_to_player'] = self
-
-		return result
 
 	def getClassPath(self):
 		
