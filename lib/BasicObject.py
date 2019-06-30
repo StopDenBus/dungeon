@@ -5,11 +5,9 @@ import sys
 
 sys.path.append('../')
 
-from lib.Translation import Translation
-
 from lib.constants import *
 
-class BasicObject(Translation):
+class BasicObject():
 
 	def __init__(self):
 
@@ -43,33 +41,11 @@ class BasicObject(Translation):
 
 	def getDescription(self):
 
-		my_id = "a{}".format(id(self))
-
-		try:
-
-			translated, errs = self.getMessage(my_id, {})
-
-		except:
-
-			translated = self.__description
-
-		print(translated)
-
-		return translated
+		return self.__description
 
 	def setDescription(self, description):
 
 		self.__description = description
-
-		if type(description) is dict:
-
-			my_language = self.getLanguage()
-
-			description = description[my_language]
-
-		my_id = "a{}".format(id(self))
-
-		self.addMessage("{} = {}".format(my_id, description))
 
 	def addProperty(self, key, value):
 

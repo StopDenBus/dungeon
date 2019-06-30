@@ -79,10 +79,6 @@ class User(pb.Avatar, Player):
 
         self.setName(name)
 
-        self.setLocaleDirectory("{}/locales".format(os.path.abspath(os.path.dirname(__file__))))
-
-        self.setLanguage('en')
-
         self.__client = None
 
         self.__server = None

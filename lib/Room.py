@@ -28,7 +28,7 @@ class Room(Container):
     def getDescription(self, current_player = None):
 
         description = textwrap.fill(BasicObject.getDescription(self), TEXT_WRAP)
-        
+
         description += "\nDu kannst in folgende Richtungen gehen: %s" % ', '.join(self.__directions.keys())
 
         for player in self.__players:

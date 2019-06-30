@@ -25,6 +25,21 @@
                 "singular": "Banane",
                 "value": 8,
                 "weight": 2
+            },
+            {
+                "description": "Eine sch\u00f6ne gelbe Banane. Du kannst sie essen.",
+                "gender": 0,
+                "id": "banane",
+                "identities": [
+                    "banane"
+                ],
+                "name": "banane",
+                "plural": "Bananen",
+                "properties": {},
+                "short_description": "Eine Banane.",
+                "singular": "Banane",
+                "value": 8,
+                "weight": 2
             }
         ],
         "lib.Knife.Knife": [
