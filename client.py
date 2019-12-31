@@ -46,6 +46,10 @@ class Client(pb.Referenceable):
 
         self.__password = None
 
+        self.__hostname = None
+
+        self.__port = None
+
     def setUserName(self, name):
 
         self.__username = name
@@ -53,6 +57,14 @@ class Client(pb.Referenceable):
     def setPassword(self, password):
 
         self.__password = password
+
+    def setHostname(self, hostname):
+
+        self.__hostname = hostname
+
+    def setPort(self, port):
+
+        self.__port = port
 
     def remote_print(self, message):
 
@@ -62,7 +74,7 @@ class Client(pb.Referenceable):
 
         factory = pb.PBClientFactory()
 
-        reactor.connectTCP("localhost", 8800, factory)
+        reactor.connectTCP(self.__hostname, self.__port, factory)
 
         #anonymousLogin = factory.login(Anonymous())
         #anonymousLogin.addCallback(connected)
@@ -141,6 +153,10 @@ def main(argv):
     parser.add_argument('--user', action='store', dest='user', default=None, help='Username')
 
     parser.add_argument('--password', action='store', dest='password', default=None, help='Password')
+
+    parser.add_argument('--host', action='store', dest='host', default='localhost', help='Gameserver name or ip')
+
+    parser.add_argument('--port', action='store', dest='port', metavar='N', type=int, default=8800, help='Port to use')
     
     options     = parser.parse_args()
     
@@ -148,11 +164,19 @@ def main(argv):
 
     password    = options.password
 
+    hostname    = options.host
+
+    port        = options.port
+
     client = Client()
 
     client.setUserName(user)
 
     client.setPassword(password)
+
+    client.setHostname(hostname)
+
+    client.setPort(port)
 
     client.connect()
 
