@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import json 
 import os
+import sys
 import time
 
 from zope.interface import implementer
@@ -12,6 +14,27 @@ from twisted.internet import reactor
 
 from lib import *
 from world import *
+
+def logMessage(severity, message):
+
+    msg = { "message": message }
+
+    if severity == "INFO":
+
+        print(json.dumps(msg))
+
+    if severity == "ERROR":
+
+        print(json.dumps(msg), file=sys.stderr)
+    
+
+def logInfoMessage(message):
+
+    logMessage("INFO", message)
+
+def logErrorMessage(message):
+
+    logMessage("ERROR", message)
 
 class Dungeon:
 
@@ -115,6 +138,8 @@ class User(pb.Avatar, Player):
 
         self.current_room.addPlayer(self)
 
+        logInfoMessage("Player {} joined.".format(self.getName()))
+
     def detached(self, mind):
         """
         called if client left the game
@@ -134,6 +159,8 @@ class User(pb.Avatar, Player):
         #self.__server.removeUser(self)
 
         self.__client = None
+
+        logInfoMessage("{} disconnected.".format(self.getName()))
 
     def callRemoteMethod(self, method, args):
 
