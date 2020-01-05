@@ -5,12 +5,16 @@ import json
 import os
 import sys
 import time
+import mysql.connector
 
 from zope.interface import implementer
 
 from twisted.spread import pb
-from twisted.cred import checkers, portal
-from twisted.internet import reactor
+from twisted.cred import checkers, portal, credentials, error as credError
+from twisted.internet import reactor, defer
+from twisted.enterprise import adbapi
+
+from cryptography.fernet import Fernet
 
 from lib import *
 from world import *
@@ -366,12 +370,70 @@ class MyRealm:
         
         return pb.IPerspective, avatar, lambda a=avatar:a.detached(mind)
 
+@implementer(checkers.ICredentialsChecker)
+class DbPasswordChecker():
+
+    credentialInterfaces = (credentials.IUsernamePassword, credentials.IUsernameHashedPassword)
+    
+    def __init__(self, cnx, key):
+        
+        self.cnx = cnx
+
+        self.__key = key.encode()
+    
+    def requestAvatarId(self, credentials):
+    
+        query = "select username, password from users where username = '{}'".format(credentials.username)
+
+        return self.cnx.runQuery(query).addCallback(self._gotQueryResults, credentials)
+
+    def _gotQueryResults(self, rows, userCredentials):
+        
+        if rows:
+            
+            userid, password = rows[0]
+
+            f = Fernet(self.__key)
+
+            password = f.decrypt(password.encode())
+            
+            return defer.maybeDeferred(
+                userCredentials.checkPassword, password).addCallback(
+                self._checkedPassword, userid)
+
+        else:
+            
+            raise credError.UnauthorizedLogin("No such user")
+    
+    def _checkedPassword(self, matched, userid):
+        
+        if matched:
+            
+            return userid
+
+        else:
+            
+            raise credError.UnauthorizedLogin("Bad password")
+
+DB_ARGS = {
+    'host': os.getenv('DB_HOST'),
+    'db': os.getenv('DB'),
+    'user': os.getenv('DB_USER'),
+    'passwd': os.getenv('DB_PASSWORD'),
+    }
+
+dbpool = adbapi.ConnectionPool("mysql.connector", **DB_ARGS)
+
 realm = MyRealm()
+
 realm.setServer(Dungeon())
-checker = checkers.InMemoryUsernamePasswordDatabaseDontUse()
-checker.addUser("malefitz", "pass1".encode('utf-8'))
-checker.addUser("stopdenbus", "pass2".encode('utf-8'))
+
+checker = DbPasswordChecker(dbpool, os.getenv('DB_KEY'))
+
 p = portal.Portal(realm, [checker])
-print("Server started.")
+
+logInfoMessage("Server started.")
+
 reactor.listenTCP(8800, pb.PBServerFactory(p))
+
 reactor.run()
