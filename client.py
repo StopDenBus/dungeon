@@ -115,9 +115,7 @@ class Client(pb.Referenceable):
             print("Hoppla, Verbindung zum Server abgebrochen.")
 
             self.shutdown()
-
-        except Exception:
-
+def main(argv):
             print("Noch eine Exception")
 
     def perspective_print(self, message):

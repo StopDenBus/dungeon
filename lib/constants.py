@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import functools
 import importlib
 import sys
 
@@ -30,19 +31,37 @@ HEALTH_VALUE = {
 	10:  [ 'ist schon so gut wie bei Lars', 'steht auf der Schwelle des Todes' ]
 }
 
-def singleton(cls, *args, **kw):
+def singleton(cls):
+	"""
+	Make a class a Singleton class (only one instance)
+	"""
+	
+	@functools.wraps(cls)
+	def wrapper_singleton(*args, **kwargs):
+		
+		if not wrapper_singleton.instance:
+			
+			wrapper_singleton.instance = cls(*args, **kwargs)
+			
+		return wrapper_singleton.instance
+		
+	wrapper_singleton.instance = None
+	
+	return wrapper_singleton
 
-	instances = {}
+#def singleton(cls, *args, **kw):
 
-	def _singleton():
+#	instances = {}
 
-		if cls not in instances:
+#	def _singleton():
 
-			instances[cls] = cls(*args, **kw)
+#		if cls not in instances:
 
-		return instances[cls]
+#			instances[cls] = cls(*args, **kw)
 
-	return _singleton
+#		return instances[cls]
+
+#	return _singleton
 
 def import_class(my_module):
 	

@@ -5,7 +5,7 @@ import sys
 
 sys.path.append('../')
 
-from lib.constants import *
+# from lib.constants import *
 
 class BasicObject():
 	"""
@@ -25,6 +25,7 @@ class BasicObject():
 
 		# long description of an object
 		self.__description = None
+		self.description: str
 
 		# gender of an object
 		self.__gender = None
@@ -59,6 +60,25 @@ class BasicObject():
 
 		# the weight of an object
 		self.__weight = 0
+
+	@property
+	def description(self):
+		"""
+		Returns the description of an object
+			:param self: the object itself
+		"""
+
+		return self.description
+
+	@description.setter
+	def description(self, description):
+		"""
+		Sets the description of an object.
+			:param self: the object itself
+			:param description: the description to set
+		"""
+
+		self.description = description
 
 	def getDescription(self):
 		"""

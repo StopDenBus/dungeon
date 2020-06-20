@@ -100,7 +100,7 @@ class Dungeon:
 
 
 class User(pb.Avatar, Player):
-    def __init__(self, name):
+    def __init__(self, name, cnx):
 
         Player.__init__(self)
 
@@ -111,6 +111,8 @@ class User(pb.Avatar, Player):
         self.__server = None
 
         self.setSaveDirectory("{}/save/player/".format(os.path.abspath(os.path.dirname(__file__))))
+
+        self.__cnx = cnx
 
     def setServer(self, server):
 
@@ -341,12 +343,32 @@ class User(pb.Avatar, Player):
 
         return {}
 
+    def savePlayer(self):
+
+        logInfoMessage("Saving player data.")
+
+        data = self.getData()
+
+        update = "UPDATE users SET data = '{}' WHERE username = '{}';".format(json.dumps(data), self.getName().lower())
+
+        self.__cnx.runOperation(update)
+
+        logInfoMessage(update)
+
+    def loadPlayer(self):
+
+        select = "SELECT data from users WHERE username = '{}'".format(self.getName().lower())
+
+        logInfoMessage(select)
+
 @implementer(portal.IRealm)
 class MyRealm:
 
-    def __init__(self):
+    def __init__(self, cnx):
 
         self.__server = None
+
+        self.__cnx = cnx
 
     def setServer(self, server):
 
@@ -362,7 +384,7 @@ class MyRealm:
         
             raise NotImplementedError
         
-        avatar = User(avatarID)
+        avatar = User(avatarID, self.__cnx)
         
         avatar.setServer(self.__server)
         
@@ -424,7 +446,7 @@ DB_ARGS = {
 
 dbpool = adbapi.ConnectionPool("mysql.connector", **DB_ARGS)
 
-realm = MyRealm()
+realm = MyRealm(dbpool)
 
 realm.setServer(Dungeon())
 

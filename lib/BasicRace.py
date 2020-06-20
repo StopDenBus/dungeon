@@ -190,6 +190,28 @@ class BasicRace(Container, Commands):
 
 		return random.choice(HEALTH_VALUE[round])
 
+	@property
+	def description(self):
+
+		description = textwrap.fill(Container.description, TEXT_WRAP)
+
+		description += "\n%s %s." % ( getNominative(self.getGender()).capitalize(), self.getHealthStatus() )
+
+		if len(Container.getItems(self)) > 0:
+
+			description += "\n%s trägt bei sich:" % ("Sie" if Container.getGender(self) == FEMALE else "Er")
+
+			for item in Container.getItems(self):
+
+				description += "\n%s" % item.getShortDescription()
+
+		return description
+
+	@description.setter
+	def description(self, description):
+
+		super(Container, self.__class__).description.fset(self, description)
+
 	# überschreibe Funktion
 	def getDescription(self):
 
