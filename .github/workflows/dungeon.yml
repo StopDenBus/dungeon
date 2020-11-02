@@ -1,0 +1,17 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Build Image
+        uses: vrutkovs/action-s2i@master
+        with:
+          base: centos/python-38-centos7
+          image: dungeon:${{ github.sha }}
