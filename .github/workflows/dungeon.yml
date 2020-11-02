@@ -28,8 +28,6 @@ jobs:
       
       - name: Push image
         run: |
-          echo "$(docker image ls)"
-          # dungeon                                              2af360288f6675656eccee833b16173d318d80b5
           REPO=${{ github.repository }}
           
           # Change all uppercase to lowercase
@@ -68,6 +66,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -am "Bump docker tag"
     - name: Push changes
-      uses: ad-m/github-push-action@main
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
