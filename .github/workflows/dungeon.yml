@@ -4,6 +4,10 @@ on:
   push:
     branches: [ master, main ]
 
+env:
+  # TODO: Change variable to your image's name.
+  IMAGE_NAME: dungeon
+
 jobs:
   build:
     name: Build
@@ -23,4 +27,11 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       
       - name: Push image
-        run: docker push docker.pkg.github.com/${{ github.repository }}/dungeon:${{ github.sha }}
+        run: |
+          REPO=${{ github.repository }}
+          
+          # Change all uppercase to lowercase
+          REPO=$(echo $REPO | tr '[A-Z]' '[a-z]')
+          
+          # Push image to registry
+          docker push docker.pkg.github.com/$REPO/dungeon:${{ github.sha }}
