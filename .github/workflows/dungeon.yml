@@ -59,7 +59,7 @@ jobs:
     - name: Update Kubernetes resources
       run: |
        cd deployment
-       kustomize edit set image dungeon_image=docker.pkg.github.com/stopdenbus/dungeon/dungeon:bla
+       kustomize edit set image dungeon_image=docker.pkg.github.com/stopdenbus/dungeon/dungeon:${{ github.sha }}
        cat kustomization.yaml
         
     - name: Commit files
@@ -68,6 +68,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -am "Bump docker tag"
     - name: Push changes
-      uses: ad-m/github-push-action@master
+      uses: ad-m/github-push-action@main
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
