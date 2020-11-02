@@ -13,5 +13,12 @@ spec:
           ports:
             - containerPort: 8800
               protocol: TCP
+          envFrom:
+            - secretRef:
+                name: database-encryption-key
+            - configMapRef:
+                name: database-configuration
+            - secretRef:
+                name: database-password
       imagePullSecrets:
         - name: github

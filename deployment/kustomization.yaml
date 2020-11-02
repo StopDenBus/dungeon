@@ -8,6 +8,16 @@ resources:
 - Deployment.yaml
 - Service.yaml
 
+configMapGenerator:
+- name: database-configuration
+  literals:
+    - DB=dungeon
+    - DB_HOST=mariadb.mariadb.svc.cluster.local:3306
+    - DB_USER=dungeon
+
+generatorOptions:
+  disableNameSuffixHash: true
+
 images:
 - name: dungeon_image
   newName: docker.pkg.github.com/stopdenbus/dungeon/dungeon
