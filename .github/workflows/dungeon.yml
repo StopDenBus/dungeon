@@ -28,10 +28,11 @@ jobs:
       
       - name: Push image
         run: |
-          REPO=${{ github.repository }}
+          echo "$(docker image ls)"
+          #REPO=${{ github.repository }}
           
           # Change all uppercase to lowercase
-          REPO=$(echo $REPO | tr '[A-Z]' '[a-z]')
+          #REPO=$(echo $REPO | tr '[A-Z]' '[a-z]')
           
           # Push image to registry
-          docker push docker.pkg.github.com/$REPO/dungeon:${{ github.sha }}
+          #docker push docker.pkg.github.com/$REPO/dungeon:${{ github.sha }}
