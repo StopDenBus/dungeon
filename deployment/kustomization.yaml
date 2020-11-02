@@ -11,4 +11,4 @@ resources:
 images:
 - name: dungeon_image
   newName: docker.pkg.github.com/stopdenbus/dungeon/dungeon
-  newTag: latest
+  newTag: e59e066734447756ec78bb860ff45a066f97cb9d
