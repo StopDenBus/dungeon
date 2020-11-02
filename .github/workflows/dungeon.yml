@@ -2,7 +2,7 @@ name: Dungeon CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
 
 env:
   # TODO: Change variable to your image's name.
