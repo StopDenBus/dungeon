@@ -93,12 +93,6 @@ class Dungeon:
 
             print("exception shutdown")
 
-        #reactor.removeAll()
-        #reactor.iterate()
-        #reactor.stop()
-        #reactor.callFromThread(reactor.stop)
-
-
 class User(pb.Avatar, Player):
     def __init__(self, name, cnx):
 
