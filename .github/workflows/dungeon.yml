@@ -4,10 +4,6 @@ on:
   push:
     branches: [ master, main ]
 
-env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: dungeon
-
 jobs:
   build:
     name: Build
@@ -21,10 +17,10 @@ jobs:
         uses: vrutkovs/action-s2i@master
         with:
           base: centos/python-38-centos7
-          image: $IMAGE_NAME:${{ github.sha }}
+          image: dungeon:${{ github.sha }}
 
       - name: Login to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       
       - name: Push image
-        run: docker push docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME:${{ github.sha }}
+        run: docker push docker.pkg.github.com/${{ github.repository }}/dungeon:${{ github.sha }}
