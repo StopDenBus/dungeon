@@ -36,7 +36,7 @@ jobs:
           REPO=$(echo $REPO | tr '[A-Z]' '[a-z]')
           
           # Tag image
-          docker tag dungeon docker.pkg.github.com/$REPO/dungeon:${{ github.sha }}
+          docker tag dungeon:${{ github.sha }} docker.pkg.github.com/$REPO/dungeon:${{ github.sha }}
 
           echo "$(docker image ls)"
 
