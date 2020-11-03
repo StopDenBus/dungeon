@@ -127,7 +127,9 @@ class Client(pb.Referenceable):
             
     def finished(self, ignored):
         
-        reactor.stop()
+        print("finished aufgerufen: {}".format(ignored))
+        
+        # reactor.stop()
 
     def sendCommand(self, command):
 
@@ -141,8 +143,6 @@ class Client(pb.Referenceable):
 
             self.shutdown()
             
-""" def main(argv):
-
     def perspective_print(self, message):
 
         print(message)
@@ -167,7 +167,7 @@ class Client(pb.Referenceable):
 
         print("Verbindung zum Server fehlgeschlagen. Grund: {}".format(reason))
 
-        self.shutdown() """
+        self.shutdown()
 
 def main(argv):
 
