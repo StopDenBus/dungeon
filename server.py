@@ -373,10 +373,8 @@ class MyRealm:
         return self.__server
 
     def requestAvatar(self, avatarID, mind, *interfaces):
-
-        if pb.IPerspective not in interfaces:
         
-            raise NotImplementedError
+        assert pb.IPerspective in interfaces
         
         avatar = User(avatarID, self.__cnx)
         
