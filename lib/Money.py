@@ -5,13 +5,13 @@ import sys
 
 sys.path.append('../')
 
-from lib.constants import *
+from lib.constants import FEMALE
 
-from lib.BasicObject import *
+from lib.BasicObject import BasicObject
 
 class Money(BasicObject):
 
-	def __init__(self):
+	def __init__(self) -> None:
 
 		BasicObject.__init__(self)
 
@@ -25,9 +25,9 @@ class Money(BasicObject):
 
 		self.setPlural("Münzen")
 
-		self.__count = 0
+		self.__count: int = 0
 
-	def addMoney(self, count):
+	def addMoney(self, count: int) -> None:
 
 		self.__count += count
 
@@ -43,11 +43,11 @@ class Money(BasicObject):
 
 		BasicObject.setShortDescription(self, short_description)
 
-	def getMoney(self):
+	def getMoney(self) -> int:
 
 		return self.__count
 
-	def getDescription(self):
+	def getDescription(self) -> str:
 
 		if self.getMoney() == 0:
 
