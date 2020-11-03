@@ -12,7 +12,7 @@ configMapGenerator:
 - literals:
   - DB=dungeon
   - DB_HOST=mariadb.mariadb.svc.cluster.local
-  - DP_PORT=30306
+  - DB_PORT=30306
   - DB_USER=dungeon
   name: database-configuration
 
