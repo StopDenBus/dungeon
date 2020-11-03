@@ -6,8 +6,11 @@ import sys
 
 from twisted.spread import pb
 from twisted.internet import stdio, reactor
-from twisted.cred import credentials
+from twisted.cred import credentials, error as credError
+from twisted.internet import reactor, defer
 from twisted.protocols import basic
+from twisted.python.failure import Failure 
+from twisted.internet.defer import gatherResults
 
 class Interact(basic.LineReceiver):
     delimiter = b'\n'
@@ -91,6 +94,12 @@ class Client(pb.Referenceable):
                              client=self)
         
         def1.addCallback(self.connected)
+        
+        def1.addErrback(self.error)
+        
+        deferreds = gatherResults([def1])
+        
+        deferreds.addCallback(self.finished)
 
         stdio.StandardIO(Interact(self))
         
@@ -103,6 +112,22 @@ class Client(pb.Referenceable):
         self.perspective = perspective
         #d = perspective.callRemote("joinGroup", "#NeedAFourth")
         #d.addCallback(self.gotGroup)
+        
+    def error(self, failure: Failure):
+        
+        reason = failure.trap(credError.UnauthorizedLogin)
+        
+        if reason == credError.UnauthorizedLogin:
+            
+            print("Username/password login failed.")
+        
+        else:
+            
+            print("Ups, da ist was schief gelaufen.")    
+            
+    def finished(self, ignored):
+        
+        reactor.stop()
 
     def sendCommand(self, command):
 
@@ -115,8 +140,8 @@ class Client(pb.Referenceable):
             print("Hoppla, Verbindung zum Server abgebrochen.")
 
             self.shutdown()
-def main(argv):
-            print("Noch eine Exception")
+            
+""" def main(argv):
 
     def perspective_print(self, message):
 
@@ -142,7 +167,7 @@ def main(argv):
 
         print("Verbindung zum Server fehlgeschlagen. Grund: {}".format(reason))
 
-        self.shutdown()
+        self.shutdown() """
 
 def main(argv):
 
