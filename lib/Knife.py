@@ -5,11 +5,12 @@ import sys
 
 sys.path.append('../')
 
-from lib.Weapon import *
+from lib.Weapon import Weapon
+from lib.constants import FEMALE
 
 class Knife(Weapon):
 
-	def __init__(self):
+	def __init__(self) -> None:
 
 		super().__init__()
 
