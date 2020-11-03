@@ -433,6 +433,7 @@ class DbPasswordChecker():
 
 DB_ARGS = {
     'host': os.getenv('DB_HOST'),
+    'port': os.getenv(('DB_PORT')),
     'db': os.getenv('DB'),
     'user': os.getenv('DB_USER'),
     'passwd': os.getenv('DB_PASSWORD'),
