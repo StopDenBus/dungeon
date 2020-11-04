@@ -5,64 +5,63 @@ import sys
 
 sys.path.append('../')
 
-# from lib.constants import *
+from constants import FEMALE
+from typing import Any, Dict, List
 
 class BasicObject():
 	"""
 	Basic object holds properties shared will all other objects
 	"""
-	def __init__(self):
-
-		super().__init__()
+	def __init__(self) -> None:
 
 		# Deprecated
 		# List of commands that are assigned to this object
-		self.__commands = { }
+		self.__commands: dict = {}
 
 		# Objects can be 'in' another ojects, e.g. inventory for players
 		# saves the 'parent' object
-		self.__container = None
+		self.__container: BasicObject = None
 
 		# long description of an object
-		self.__description = None
+		self.__description: str = None
 		self.description: str
 
 		# gender of an object
-		self.__gender = None
+		self.__gender: int = FEMALE
 
 		# Deprecated
 		# the name of an object or player
 		# just use __name
-		self.__id = None
+		self.__id: str = None
 
 		# list of id's
-		self.__identities = [ ]
+		self.__identities: List[str] = []
 
 		# the name of an object, player name, npc name
-		self.__name = None
+		self.__name: str = None
 
 		# the name of an object if there is more than one of them in a stack
 		# e.g. 'Banane'  -> 'Bananen'
-		self.__plural = None
+		self.__plural: str = None
 
 		# each object can have their own additional properties
-		self.__properties = { }
+		self.__properties: Dict[str, Any] = {}
 
 		# short description of an object
-		self.__short_description = None
+		self.__short_description: str = None
 
 		# the name of an object if there is only one of them in a stack
 		# e.g. 'Bananen'  -> 'Banane'
-		self.__singular = None
+		self.__singular: str = None
 
 		# the value of an object
-		self.__value = 0
+		self.__value: int = 0
 
 		# the weight of an object
-		self.__weight = 0
+		self.__weight: int = 0
 
 	@property
-	def description(self):
+	def description(self) -> str:
 		"""
 		Returns the description of an object
 			:param self: the object itself
@@ -71,7 +70,7 @@ class BasicObject():
 		return self.description
 
 	@description.setter
-	def description(self, description):
+	def description(self, description: str) -> None:
 		"""
 		Sets the description of an object.
 			:param self: the object itself
@@ -80,14 +79,14 @@ class BasicObject():
 
 		self.description = description
 
-	def getDescription(self):
+	def getDescription(self) -> str:
 		"""
 		Returns the description of an object
 			:param self: the object itself
 		"""
 		return self.__description
 
-	def setDescription(self, description):
+	def setDescription(self, description: str) -> None:
 		"""
 		Sets the description of an object.
 			:param self: the object itself
@@ -95,7 +94,7 @@ class BasicObject():
 		"""
 		self.__description = description
 
-	def addProperty(self, key, value):
+	def addProperty(self, key: str, value: Any) -> None:
 		"""
 		Adds a property to an object
 			:param self: the object itself
@@ -104,7 +103,7 @@ class BasicObject():
 		"""
 		self.__properties[key] = value
 
-	def getProperty(self, key):
+	def getProperty(self, key: str) -> Any:
 		"""
 		Returns the value a given key, return 'None' if key not exists
 			:param self: the object itself
@@ -119,14 +118,14 @@ class BasicObject():
 		# key not found, return 'None'
 		return None
 
-	def getName(self):
+	def getName(self) -> str:
 		"""
 		Returns the capitalized name of an object
 			:param self: the object itself
 		"""
 		return self.__name.capitalize()
 
-	def setName(self, name):
+	def setName(self, name: str) -> None:
 		"""
 		Sets the name of an object
 			:param self: the object itself
@@ -135,20 +134,20 @@ class BasicObject():
 		# set the name
 		self.__name = name
 
-		# depricated: set the id
+		# deprecated: set the id
 		self.__id = name
 
 		# add name to list of id's
 		self.addIdentity(name)
 
-	def getWeight(self):
+	def getWeight(self) -> int:
 		"""
 		Returns the weight of an object
 			:param self: the object itself
 		"""
 		return self.__weight
 
-	def setWeight(self, weight):
+	def setWeight(self, weight: int) -> None:
 		"""
 		Sets the weight of an object
 			:param self: the object itself
@@ -156,49 +155,53 @@ class BasicObject():
 		"""
 		self.__weight = weight
 
-	def getShortDescription(self):
+	def getShortDescription(self) -> str:
 
 		return self.__short_description
 
-	def setShortDescription(self, short_description):
+	def setShortDescription(self, short_description: str) -> str:
 
 		self.__short_description = short_description
 
-	def getValue(self):
+	def getValue(self) -> int:
 
 		return self.__value
 
-	def setValue(self, value):
+	def setValue(self, value: int) -> None:
 
 		self.__value = value
 
-	def getIdentities(self):
+	def getIdentities(self) -> List[str]:
+     
+		for id in self.__identities:
+      
+			yield id
 
-		return self.__identities
-
-	def addIdentity(self, identity):
+	def addIdentity(self, identity: str) -> None:
 
 		self.__identities.append(identity)
 
-	def getGender(self):
+	def getGender(self) -> int:
 
 		return self.__gender
 
-	def setGender(self, gender):
+	def setGender(self, gender: int) -> None:
 
 		self.__gender = gender
 
-	def addCommand(self, command, action):
+	def addCommand(self, command: str, action: Any) -> None:
 
 		self.__commands[command] = action
 
-	def getCommand(self, command):
+	def getCommand(self, command: str) -> Any:
 
 		return self.__commands[command]
 
-	def getCommands(self):
-
-		return self.__commands.keys()
+	def getCommands(self) -> List[str]:
+     
+		for command in self.__commands.keys():
+      
+			yield command
 
 	def setId(self, id):
 
