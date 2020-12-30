@@ -6,7 +6,7 @@ import sys
 sys.path.append('../')
 
 from lib.BasicObject import *
-from lib.Money import *
+from lib.Money import Money
 
 class Container(BasicObject):
 
