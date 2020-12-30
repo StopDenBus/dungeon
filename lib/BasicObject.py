@@ -5,7 +5,7 @@ import sys
 
 sys.path.append('../')
 
-from constants import FEMALE
+from lib.constants import FEMALE
 from typing import Any, Dict, List
 
 class BasicObject():
