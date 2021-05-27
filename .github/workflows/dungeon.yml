@@ -70,3 +70,8 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+    - name: Delete packages
+      uses: actions/delete-package-versions@v1
+      with:
+        package-name: 'dungeon'
+        num-old-versions-to-delete: 3
