@@ -21,6 +21,8 @@ class markath01(Room):
 
         messer = Knife()
 
+        messer.setName('messer')
+
         messer.setDescription("Ein Messer.")
 
         messer.setShortDescription("Ein Messer.")
@@ -63,21 +65,21 @@ class kraemer01(Room):
         #banana = Banane()
 
         #banana.setDescription("Diese Banane ist schon ganz matschig.")
-        
+
         #banana.setShortDescription("Eine faule Banane.")
-        
+
         #banana.addIdentity("faule banane")
-        
+
         #banana.setHealthiness(0)
 
         #seller = Seller("verkäufer", MALE)
-        
+
         #seller.setDescription("Ein Verkäufer. Er schaut dich mit einem wissendem Lächeln an. Du kannst bei ihm kaufen und verkaufen.")
-        
+
         #seller.setShortDescription("Ein Verkäufer.")
-        
+
         #seller.addItem(banana)
-        
+
         #seller.addMoney(1000)
 
         #self.addCreature(seller)

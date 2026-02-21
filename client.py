@@ -11,6 +11,7 @@ from twisted.internet import reactor, defer
 from twisted.protocols import basic
 from twisted.python.failure import Failure 
 from twisted.internet.defer import gatherResults
+from twisted.internet.error import ConnectionDone
 
 class Interact(basic.LineReceiver):
     delimiter = b'\n'
@@ -115,7 +116,7 @@ class Client(pb.Referenceable):
         
     def error(self, failure: Failure):
         
-        reason = failure.trap(credError.UnauthorizedLogin)
+        reason = failure.trap(credError.UnauthorizedLogin, ConnectionDone)
         
         if reason == credError.UnauthorizedLogin:
             

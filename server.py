@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import json 
+import json
 import os
 import sys
 import time
@@ -30,7 +30,7 @@ def logMessage(severity, message):
     if severity == "ERROR":
 
         print(json.dumps(msg), file=sys.stderr)
-    
+
 
 def logInfoMessage(message):
 
@@ -119,12 +119,12 @@ class User(pb.Avatar, Player):
     def attached(self, mind):
         """
         called if a client attached the game
-            :param self: 
-            :param mind: 
-        """   
+            :param self:
+            :param mind:
+        """
         self.__client = mind
 
-        self.loadPlayer()
+        self.loadPlayer().addCallback(self.setPlayerData)
 
         Dungeon.addUser(self)
 
@@ -132,7 +132,7 @@ class User(pb.Avatar, Player):
 
         self.tellWorld("{} betritt die Welt.".format(self.getName()))
 
-        self.send("Willkommen zurück {}".format(self.getName()))
+        self.send("Willkommen zurück {}.".format(self.getName()))
 
         self.current_room = markath01()
 
@@ -143,8 +143,8 @@ class User(pb.Avatar, Player):
     def detached(self, mind):
         """
         called if client left the game
-            :param self: 
-            :param mind: 
+            :param self:
+            :param mind:
         """
         print("Verbindung zu {} verloren.".format(self.getName()))
 
@@ -169,9 +169,9 @@ class User(pb.Avatar, Player):
     def send(self, message):
         """
         sends a message to this client
-            :param self: 
+            :param self:
             :param message: Message to send
-        """   
+        """
         try:
 
             self.__client.callRemote("print", message)
@@ -183,7 +183,7 @@ class User(pb.Avatar, Player):
     def tellWorld(self, message):
         """
         sends a message to all clients, but self
-            :param self: 
+            :param self:
             :param message: message to send
         """
         # go through all attached clients
@@ -206,7 +206,7 @@ class User(pb.Avatar, Player):
     def tellRoom(self, message):
         """
         sends a message to all players in current room
-            :param self: 
+            :param self:
             :param message: message to send
         """
         for player in self.current_room.getPlayers():
@@ -220,17 +220,17 @@ class User(pb.Avatar, Player):
     def tellPlayer(self, player, message):
         """
         sends a message to a player
-            :param self: 
+            :param self:
             :param player: player to send the message
             :param message: message to send
-        """   
+        """
         player.send(message)
 
     def perspective_doCommand(self, command):
         """
         called by remote client
         will process a command
-            :param self: 
+            :param self:
             :param command: command to process
         """
         my_command = command.split()[0]
@@ -238,27 +238,27 @@ class User(pb.Avatar, Player):
         if my_command == 'shutdown':
 
             self.cmdShutdown()
-    
+
         if len(command.split()) > 1:
-        
+
             args = " ".join(command.split()[1:])
-        
+
         else:
-        
+
             args = None
-            
+
         result = self.doCommand(my_command, args)
-        
+
         if 'message_for_player' in result:
-            
+
             self.tellPlayer(self, result['message_for_player'])
-            
+
         if 'message_for_player_in_room' in result:
-            
+
             self.tellRoom(result['message_for_player_in_room'])
-                
+
         if 'message_for_all_player' in result:
-            
+
             self.tellWorld(result['message_for_all_player'])
 
     def cmdSage(self, message):
@@ -355,6 +355,24 @@ class User(pb.Avatar, Player):
 
         logInfoMessage(select)
 
+        return self.__cnx.runQuery(select)
+
+    def setPlayerData(self, data):
+
+        player_data = data[0][0]
+
+        try:
+            player_data = json.loads(player_data)
+        except Exception as ex:
+            logInfoMessage(str(ex))
+        else:
+            try:
+                self.setData(player_data)
+            except Exception as ex_player:
+                logErrorMessage(str(ex_player))
+            else:
+                logInfoMessage(f"Player {self.getName()} successfully loaded.")
+
 @implementer(portal.IRealm)
 class MyRealm:
 
@@ -373,61 +391,65 @@ class MyRealm:
         return self.__server
 
     def requestAvatar(self, avatarID, mind, *interfaces):
-        
+
         assert pb.IPerspective in interfaces
-        
+
         avatar = User(avatarID, self.__cnx)
-        
+
         avatar.setServer(self.__server)
-        
+
         avatar.attached(mind)
-        
+
         return pb.IPerspective, avatar, lambda a=avatar:a.detached(mind)
 
 @implementer(checkers.ICredentialsChecker)
 class DbPasswordChecker():
 
     credentialInterfaces = (credentials.IUsernamePassword, credentials.IUsernameHashedPassword)
-    
+
     def __init__(self, cnx, key):
-        
+
         self.cnx = cnx
 
         self.__key = key.encode()
-    
+
     def requestAvatarId(self, credentials):
-    
+
         query = "select username, password from users where username = '{}'".format(credentials.username)
 
         return self.cnx.runQuery(query).addCallback(self._gotQueryResults, credentials)
 
     def _gotQueryResults(self, rows, userCredentials):
-        
+
         if rows:
-            
+
             userid, password = rows[0]
 
             f = Fernet(self.__key)
 
             password = f.decrypt(password.encode())
-            
+
             return defer.maybeDeferred(
                 userCredentials.checkPassword, password).addCallback(
                 self._checkedPassword, userid)
 
         else:
-            
+
             raise credError.UnauthorizedLogin("No such user")
-    
+
     def _checkedPassword(self, matched, userid):
-        
+
         if matched:
-            
+
             return userid
 
         else:
-            
+
             raise credError.UnauthorizedLogin("Bad password")
+
+def reactor_error(failure):
+
+    print("reactor_error calledaddErrback")
 
 DB_ARGS = {
     'host': os.getenv('DB_HOST'),
