@@ -22,4 +22,4 @@ generatorOptions:
 images:
 - name: dungeon_image
   newName: docker.pkg.github.com/stopdenbus/dungeon/dungeon
-  newTag: 416e199f380da21cb4c89cba0c7982ce679549e0
+  newTag: 8c7c2bf22a73dd4a96ada23b46c624b6616c1187
